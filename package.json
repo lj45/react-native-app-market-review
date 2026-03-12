@@ -1,0 +1,46 @@
+{
+  "name": "react-native-app-market-review",
+  "version": "0.1.0",
+  "description": "Review on App Store or Android market directly in your React Native app",
+  "main": "src/index.ts",
+  "react-native": "src/index.ts",
+  "types": "src/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "files": [
+    "src",
+    "lib",
+    "android",
+    "ios",
+    "cpp",
+    "*.podspec",
+    "react-native.config.js",
+    "!ios/build",
+    "!android/build",
+    "!android/gradle",
+    "!android/gradlew",
+    "!android/gradlew.bat",
+    "!android/local.properties",
+    "!**/__tests__",
+    "!**/__fixtures__",
+    "!**/__mocks__",
+    "!**/.*"
+  ],
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lj45/react-native-app-market-review.git"
+  },
+  "author": "Jet <413686520@qq.com> (https://github.com/lj45)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lj45/react-native-app-market-review/issues"
+  },
+  "homepage": "https://github.com/lj45/react-native-app-market-review#readme",
+  "nativePackage": true
+}
