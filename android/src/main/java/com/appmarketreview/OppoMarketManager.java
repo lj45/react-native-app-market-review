@@ -45,12 +45,19 @@ public class OppoMarketManager {
   // https://open.oppomobile.com/documentation/page/info?id=11969
   // 自更新支持应用直接拉起 OPPO 软件商店详情页，完成自动/手动更新
   // market://details？id=应用包名&v_code = xxxx
-  public static void jumpToDetail(Context context, String marketPackageName) {
+  public static void jumpToDetail(Activity context, String marketPackageName) {
     try {
       String id = context.getPackageName();
       Uri marketUri = Uri.parse("market://details?id=" + id);
       Intent intent = new Intent(Intent.ACTION_VIEW, marketUri);
-      intent.setPackage(marketPackageName);
+      if (MarketTools.getVersionCode(context, PKG_MK_HEYTAP) >= SUPPORT_MK_VERSION) {
+        intent.setPackage(PKG_MK_HEYTAP);
+      } else if (MarketTools.getVersionCode(context, PKG_MK_OPPO) >= SUPPORT_MK_VERSION) {
+        intent.setPackage(PKG_MK_OPPO);
+      } else {
+        intent.setPackage(marketPackageName);
+      }
+
       intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
       context.startActivity(intent);
     } catch (Exception e) {
