@@ -1,11 +1,9 @@
 package com.appmarketreview;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableMap;
 
 // https://developer.honor.com/cn/doc/guides/101567
 public class RNMarketReviewImpl {
@@ -16,12 +14,12 @@ public class RNMarketReviewImpl {
 
   }
 
-  public void startToDetail(Activity activity){
-    MarketTools.getTools().startToDetail(activity,activity);
+  public void startToDetail(Activity activity, ReadableMap config){
+    MarketTools.getTools().startToDetail(activity,config);
   }
 
-  public void startToComment(Activity activity){
-    MarketTools.getTools().startMarket(activity,activity);
+  public void startToComment(Activity activity, ReadableMap config){
+    MarketTools.getTools().startComment(activity,config);
   }
 
 }

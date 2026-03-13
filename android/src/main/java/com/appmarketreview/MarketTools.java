@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
+import com.facebook.react.bridge.ReadableMap;
+
 public class MarketTools {
 
   private static MarketTools tools;
@@ -24,16 +26,16 @@ public class MarketTools {
 
   /***
    * 不指定包名
-   * @param mContext
+   * @param config
    */
-  public void startToDetail(Context mContext, Activity activity) {
+  public void startToDetail(Activity activity, ReadableMap config) {
     try {
       String deviceBrand = getDeviceBrand();//获得手机厂商
       //根据厂商获取对应市场的包名
       String brandName = deviceBrand.toUpperCase();//大写
       String marketPackageName = getBrandName(brandName);
       Log.d("MarketTest","marketPackageName:" + marketPackageName);
-      Log.d("MarketTest","packageName:" + mContext.getPackageName());
+      Log.d("MarketTest","packageName:" + activity.getPackageName());
       if(PACKAGE_NAME.OPPO_PACKAGE_NAME.equals(marketPackageName)){
         OppoMarketManager.jumpToDetail(activity,marketPackageName);
         return;
@@ -42,16 +44,22 @@ public class MarketTools {
         VivoMarketManager.jumpToDetail(activity,marketPackageName);
         return;
       }
-      if(PACKAGE_NAME.HUAWEI_PACKAGE_NAME.equals(marketPackageName)){
-        HuaWeiMarketManager.jumpToDetail(activity,marketPackageName);
+      String huaweiAppId = "";
+      if(config != null && config.hasKey("huaweiAppId")) {
+        huaweiAppId = config.getString("huaweiAppId");
+      }
+      if (PACKAGE_NAME.HUAWEI_PACKAGE_NAME.equals(marketPackageName)
+              && huaweiAppId != null && !huaweiAppId.isEmpty()) {
+        HuaWeiMarketManager.jumpToDetail(activity, marketPackageName, huaweiAppId);
         return;
       }
       if(PACKAGE_NAME.HONOR_PACKAGE_NAME.equals(marketPackageName)){
-        if (isInstalled("com.hihonor.appmarket",mContext)) {
+        if (isInstalled("com.hihonor.appmarket",activity)) {
           HonorMarketManager.jumpToDetail(activity,marketPackageName);
           return;
-        } else if(isInstalled("com.huawei.appmarket",mContext)){
-          HuaWeiMarketManager.jumpToDetail(activity,marketPackageName);
+        } else if(isInstalled("com.huawei.appmarket",activity)
+                && huaweiAppId != null && !huaweiAppId.isEmpty()){
+          HuaWeiMarketManager.jumpToDetail(activity,marketPackageName,huaweiAppId);
           return;
         }
       }
@@ -59,8 +67,8 @@ public class MarketTools {
         XiaoMiMarketManager.jumpToDetail(activity);
         return;
       }
-      String packageName = mContext.getPackageName();
-      startMarket(mContext, packageName, marketPackageName);
+      String packageName = activity.getPackageName();
+      startMarket(activity, packageName, marketPackageName);
     } catch (ActivityNotFoundException anf) {
       Log.e("MarketTools", "要跳转的应用市场不存在!");
     } catch (Exception e) {
@@ -68,25 +76,19 @@ public class MarketTools {
     }
   }
 
-  public void startMarket(Context mContext, Activity activity) {
-    String packageName = mContext.getPackageName();//得到包名
-    startMarket(mContext, packageName,activity);
-  }
-
   /**
    * 指定包名
    *
-   * @param mContext
-   * @param packageName
    */
-  public boolean startMarket(Context mContext, String packageName,Activity activity) {
+  public boolean startComment(Activity activity, ReadableMap config) {
     try {
+      String packageName = activity.getPackageName();
       String deviceBrand = getDeviceBrand();//获得手机厂商
       //根据厂商获取对应市场的包名
       String brandName = deviceBrand.toUpperCase();//大写
       String marketPackageName = getBrandName(brandName);
       Log.d("MarketTest","marketPackageName:" + marketPackageName);
-      Log.d("MarketTest","packageName:" + mContext.getPackageName());
+      Log.d("MarketTest","packageName:" + packageName);
       if(PACKAGE_NAME.OPPO_PACKAGE_NAME.equals(marketPackageName)){
         OppoMarketManager.jumpToComment(activity);
         return true;
@@ -95,16 +97,22 @@ public class MarketTools {
         VivoMarketManager.jumpToComment(activity);
         return true;
       }
-      if(PACKAGE_NAME.HUAWEI_PACKAGE_NAME.equals(marketPackageName)){
-        HuaWeiMarketManager.jumpToDetail(activity,marketPackageName);
+      String huaweiAppId = "";
+      if(config != null && config.hasKey("huaweiAppId")) {
+        huaweiAppId = config.getString("huaweiAppId");
+      }
+      if(PACKAGE_NAME.HUAWEI_PACKAGE_NAME.equals(marketPackageName)
+              && huaweiAppId != null && !huaweiAppId.isEmpty()){
+        HuaWeiMarketManager.jumpToDetail(activity,marketPackageName,huaweiAppId);
         return true;
       }
       if(PACKAGE_NAME.HONOR_PACKAGE_NAME.equals(marketPackageName)){
-        if (isInstalled("com.hihonor.appmarket",mContext)) {
+        if (isInstalled("com.hihonor.appmarket",activity)) {
           HonorMarketManager.jumpToComment(activity,marketPackageName);
           return true;
-        } else if(isInstalled("com.huawei.appmarket",mContext)){
-          HuaWeiMarketManager.jumpToDetail(activity,marketPackageName);
+        } else if(isInstalled("com.huawei.appmarket",activity)
+                && huaweiAppId != null && !huaweiAppId.isEmpty()){
+          HuaWeiMarketManager.jumpToDetail(activity,marketPackageName,huaweiAppId);
           return true;
         }
       }
@@ -115,18 +123,18 @@ public class MarketTools {
       if (null == marketPackageName || "".equals(marketPackageName)) {
         //手机不再列表里面,去尝试寻找
         //检测百度和应用宝是否在手机上安装,如果安装，则跳转到这两个市场的其中一个
-        boolean isExit1 = isCheckBaiduOrYYB(mContext, PACKAGE_NAME.BAIDU_PACKAGE_NAME);
+        boolean isExit1 = isCheckBaiduOrYYB(activity, PACKAGE_NAME.BAIDU_PACKAGE_NAME);
         if (isExit1) {
-          startMarket(mContext, packageName, PACKAGE_NAME.BAIDU_PACKAGE_NAME);
+          startMarket(activity, packageName, PACKAGE_NAME.BAIDU_PACKAGE_NAME);
           return true;
         }
-        boolean isExit2 = isCheckBaiduOrYYB(mContext, PACKAGE_NAME.TENCENT_PACKAGE_NAME);
+        boolean isExit2 = isCheckBaiduOrYYB(activity, PACKAGE_NAME.TENCENT_PACKAGE_NAME);
         if (isExit2) {
-          startMarket(mContext, packageName, PACKAGE_NAME.TENCENT_PACKAGE_NAME);
+          startMarket(activity, packageName, PACKAGE_NAME.TENCENT_PACKAGE_NAME);
           return true;
         }
       }
-      startMarket(mContext, packageName, marketPackageName);
+      startMarket(activity, packageName, marketPackageName);
       return true;
     } catch (ActivityNotFoundException anf) {
       Log.e("MarketTools", "要跳转的应用市场不存在!");
@@ -331,5 +339,3 @@ public class MarketTools {
   }
 
 }
-
-

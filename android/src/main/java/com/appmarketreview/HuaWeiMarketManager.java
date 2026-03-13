@@ -8,8 +8,7 @@ import android.net.Uri;
 //https://developer.huawei.com/consumer/cn/doc/app/comment-management-0000002246992933
 public class HuaWeiMarketManager {
 
-  public static void jumpToDetail(Context context, String marketPackageName) {
-    String appId = "C109037581";
+  public static void jumpToDetail(Context context, String marketPackageName, String appId) {
     try {
       // 可以到应用的详情页面
       Intent intent = new Intent("com.huawei.appmarket.appmarket.intent.action.AppDetail.withid");
@@ -34,4 +33,3 @@ public class HuaWeiMarketManager {
   }
 
 }
-

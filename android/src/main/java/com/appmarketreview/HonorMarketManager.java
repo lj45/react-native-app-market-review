@@ -1,4 +1,4 @@
-package com.appmarketreview
+package com.appmarketreview;
 
 import android.content.Context;
 import android.content.Intent;

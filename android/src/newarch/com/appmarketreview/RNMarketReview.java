@@ -1,12 +1,17 @@
-package com.appmarketreview
+package com.appmarketreview;
 
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.app.Activity;
+import androidx.annotation.NonNull;
+
+import com.facebook.react.bridge.Promise;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableMap;
 // https://developer.honor.com/cn/doc/guides/101567
 
-import com.appmarketreview.NativeRNShareSpec;
-public class RNMarketReview extends  NativeRNShareSpec{
+public class RNMarketReview extends  NativeAppMarketReviewSpec{
 
   private ReactApplicationContext mReactContext;
   private final RNMarketReviewImpl delegate;
@@ -22,6 +27,8 @@ public class RNMarketReview extends  NativeRNShareSpec{
   public String getName() {
     return RNMarketReviewImpl.NAME;
   }
+
+
 
   @Override
   public void startToDetail(ReadableMap options, Promise promise) {
