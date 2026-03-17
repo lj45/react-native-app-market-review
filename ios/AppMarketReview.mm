@@ -1,4 +1,8 @@
 #import "AppMarketReview.h"
+#import <React/RCTTurboModule.h>
+#import <React/ObjCTurboModule.h>
+#import <React/TurboModule.h>
+
 
 @implementation AppMarketReview
 - (NSNumber *)multiply:(double)a b:(double)b {
